@@ -213,7 +213,7 @@ HELP_EMAIL_ADDRESS = get_from_env('HELP_EMAIL_ADDRESS', 'admin@pemilu-kmtk.xyz')
 
 AUTH_TEMPLATE_BASE = "server_ui/templates/base.html"
 HELIOS_TEMPLATE_BASE = "server_ui/templates/base.html"
-HELIOS_ADMIN_ONLY = False
+HELIOS_ADMIN_ONLY = True
 HELIOS_VOTERS_UPLOAD = True
 HELIOS_VOTERS_EMAIL = True
 
