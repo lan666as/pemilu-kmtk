@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  database:
+    restart: unless-stopped
+    image: postgres:13-alpine
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+    env_file: 
+      - ./.env.prod.db
+  
+  redis:
+    restart: unless-stopped
+    image: redis:alpine
+
+  web:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: gunicorn wsgi:application -b 0.0.0.0:8000 -w 8
+    volumes: 
+      - ./:/usr/src/app
+    expose:
+      - 8000
+    env_file: 
+      - ./.env.prod
+    depends_on: 
+      - database
+  
+  celery:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: celery -A helios worker -l INFO
+    volumes: 
+      - ./:/usr/src/app
+    env_file: 
+      - ./.env.prod
+    depends_on: 
+      - database
+      - redis
+
+  nginx:
+    restart: unless-stopped
+    image: nginx:alpine
+    volumes: 
+      - ./:/usr/src/app
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 1337:80
+    depends_on: 
+      - web
+
+volumes:
+  postgres_data:

@@ -4,9 +4,10 @@ django_webtest>=1.9.7
 gunicorn==20.1.0
 
 dj_database_url==0.5.0
-psycopg2==2.9.1
+psycopg2-binary==2.9.1
 
 celery==5.1.2
+redis==3.5.3
 django-picklefield==3.0.1
 
 python-dateutil>=2.8

@@ -4,18 +4,6 @@ import sys
 
 import json
 import os
-import environ
-
-env = environ.Env()
-environ.Env.read_env()  
-DBPWD = env('DBPWD')
-GOOGLESECRET = env('GOOGLESECRET')
-GOOGLEID = env('GOOGLEID')
-
-SMTPHOST = env('SMTPHOST')
-SMTPPORT = env('SMTPPORT')
-SMTPUSER = env('SMTPUSER')
-SMTPPASSWORD = env('SMTPPASSWORD')
 
 TESTING = 'test' in sys.argv
 
@@ -50,8 +38,13 @@ SHOW_USER_INFO = (get_from_env('SHOW_USER_INFO', '1') == '1')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'helios',
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE' : get_from_env('DATABASE_ENGINE', "django.db.backends.sqlite3"),
+        'NAME' : get_from_env('DATABASE_NAME', "helios_db.sqlite3"),
+        "USER": get_from_env("DATABASE_USER", "user"),
+        "PASSWORD": get_from_env("DATABASE_PASSWORD", "password"),
+        "HOST": get_from_env("DATABASE_HOST", "localhost"),
+        "PORT": get_from_env("DATABASE_PORT", "5432"),
         'CONN_MAX_AGE': 600,
     },
 }
@@ -81,17 +74,12 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+# MEDIA_ROOT = ''
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = ''
-
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-STATIC_URL = '/media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = get_from_env('SECRET_KEY', 'replaceme')
@@ -100,7 +88,7 @@ SECRET_KEY = get_from_env('SECRET_KEY', 'replaceme')
 # If in production, you got a bad request (400) error
 #More info: https://docs.djangoproject.com/en/1.7/ref/settings/#allowed-hosts (same for 1.6)
 
-ALLOWED_HOSTS = get_from_env('ALLOWED_HOSTS', 'localhost').split(",")
+ALLOWED_HOSTS = get_from_env('ALLOWED_HOSTS', 'localhost').split(" ")
 
 # Secure Stuff
 if get_from_env('SSL', '0') == '1':
@@ -141,6 +129,13 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'urls'
 
 ROOT_PATH = os.path.dirname(__file__)
+
+# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
+# trailing slash.
+# Examples: "http://foo.com/media/", "/media/".
+STATIC_URL = '/media/'
+
+# STATIC_ROOT = ROOT_PATH + "staticfiles/"
 
 TEMPLATES = [
     {
@@ -218,18 +213,18 @@ HELIOS_VOTERS_UPLOAD = True
 HELIOS_VOTERS_EMAIL = True
 
 # are elections private by default?
-HELIOS_PRIVATE_DEFAULT = False
+HELIOS_PRIVATE_DEFAULT = True
 
 # authentication systems enabled
 # AUTH_ENABLED_SYSTEMS = ['password','facebook','twitter', 'google', 'yahoo']
 AUTH_ENABLED_SYSTEMS = get_from_env('AUTH_ENABLED_SYSTEMS',
-                                    get_from_env('AUTH_ENABLED_AUTH_SYSTEMS', 'password,google,facebook')
-                                    ).split(",")
+                                    get_from_env('AUTH_ENABLED_AUTH_SYSTEMS', 'password google')
+                                    ).split(" ")
 AUTH_DEFAULT_SYSTEM = get_from_env('AUTH_DEFAULT_SYSTEM', get_from_env('AUTH_DEFAULT_AUTH_SYSTEM', None))
 
 # google
-GOOGLE_CLIENT_ID = get_from_env('GOOGLE_CLIENT_ID', GOOGLEID)
-GOOGLE_CLIENT_SECRET = get_from_env('GOOGLE_CLIENT_SECRET', GOOGLESECRET)
+GOOGLE_CLIENT_ID = get_from_env('GOOGLE_CLIENT_ID', "")
+GOOGLE_CLIENT_SECRET = get_from_env('GOOGLE_CLIENT_SECRET', "")
 
 # facebook
 FACEBOOK_APP_ID = get_from_env('FACEBOOK_APP_ID','')
@@ -265,10 +260,10 @@ GH_CLIENT_SECRET = get_from_env('GH_CLIENT_SECRET', '')
 
 
 # email server
-EMAIL_HOST = get_from_env('EMAIL_HOST', SMTPHOST)
-EMAIL_PORT = int(get_from_env('EMAIL_PORT', SMTPPORT))
-EMAIL_HOST_USER = get_from_env('EMAIL_HOST_USER', SMTPUSER)
-EMAIL_HOST_PASSWORD = get_from_env('EMAIL_HOST_PASSWORD', SMTPPASSWORD)
+EMAIL_HOST = get_from_env('EMAIL_HOST', "")
+EMAIL_PORT = int(get_from_env('EMAIL_PORT', ""))
+EMAIL_HOST_USER = get_from_env('EMAIL_HOST_USER', "")
+EMAIL_HOST_PASSWORD = get_from_env('EMAIL_HOST_PASSWORD', "")
 EMAIL_USE_TLS = (get_from_env('EMAIL_USE_TLS', '0') == '1')
 
 # to use AWS Simple Email Service

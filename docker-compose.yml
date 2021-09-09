@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres:13-alpine
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+    environment: 
+      - POSTGRES_USER=pemilu
+      - POSTGRES_PASSWORD=TeknikKimia.600
+      - POSTGRES_DB=helios
+
+  redis:
+    image: redis:alpine
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes: 
+      - ./:/usr/src/app
+    ports: 
+      - 8000:8000
+    env_file: 
+      - ./.env.dev
+    depends_on: 
+      - database
+
+  celery:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: celery -A helios worker -l INFO
+    volumes: 
+      - ./:/usr/src/app
+    env_file: 
+      - ./.env.prod
+    depends_on: 
+      - database
+      - redis
+
+volumes:
+  postgres_data:
