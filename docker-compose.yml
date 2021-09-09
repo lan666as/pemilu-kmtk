@@ -19,7 +19,7 @@ services:
     volumes: 
       - ./:/usr/src/app
     ports: 
-      - 80:8000
+      - 8000:8000
     env_file: 
       - ./.env.dev
     depends_on: 
@@ -38,6 +38,18 @@ services:
     depends_on: 
       - database
       - redis
+
+  nginx:
+    image: nginx:alpine
+    volumes: 
+      - ./:/usr/src/app
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx/certs:/etc/nginx/certs
+    ports:
+      - 80:80
+      - 443:443
+    depends_on: 
+      - web
 
 volumes:
   postgres_data:
