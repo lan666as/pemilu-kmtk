@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    command: gunicorn wsgi:application -b 0.0.0.0:8000 -w 11
+    command: gunicorn wsgi:application -b 0.0.0.0:8000 -w 9
     volumes: 
       - ./:/usr/src/app
     expose:
@@ -48,8 +48,10 @@ services:
     volumes: 
       - ./:/usr/src/app
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs:/etc/nginx/certs
     ports:
-      - 1337:80
+      - 80:80
+      - 443:443
     depends_on: 
       - web
 
