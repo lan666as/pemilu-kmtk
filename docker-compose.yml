@@ -29,12 +29,12 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     command: celery -A helios worker -l INFO
     volumes: 
       - ./:/usr/src/app
     env_file: 
-      - ./.env.prod
+      - ./.env.dev
     depends_on: 
       - database
       - redis
