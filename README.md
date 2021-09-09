@@ -11,6 +11,9 @@ Helios is an end-to-end verifiable voting system.
 
     docker-compose -f docker-compose.yml up --build
 
+Then run this one-time command
+
+    docker-compose -f docker-compose.yml exec web /bin/sh ./setup.dev.sh
 
 ## Production
 
@@ -21,4 +24,5 @@ Then run this one-time command
     docker compose -f docker-compose.prod.yml exec web /bin/sh ./setup.prod.sh
 
 # Referensi
+
 [Tutorial](https://wrmack.github.io/helios-server-docs/site/)
