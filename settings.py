@@ -135,7 +135,7 @@ ROOT_PATH = os.path.dirname(__file__)
 # Examples: "http://foo.com/media/", "/media/".
 STATIC_URL = '/media/'
 
-# STATIC_ROOT = ROOT_PATH + "staticfiles/"
+# STATIC_ROOT = os.path.join(ROOT_PATH, 'staticfiles')
 
 TEMPLATES = [
     {
@@ -159,6 +159,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    # "django.contrib.staticfiles",
     ## HELIOS stuff
     'helios_auth',
     'helios',

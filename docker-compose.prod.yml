@@ -18,7 +18,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
-    command: gunicorn wsgi:application -b 0.0.0.0:8000 -w 8
+    command: gunicorn wsgi:application -b 0.0.0.0:8000 -w 11
     volumes: 
       - ./:/usr/src/app
     expose:
